@@ -1,3 +1,7 @@
 {% extends "main.html" %} {% block content %}
 <h1>Single Project Page</h1>
-{{ code }} {% endblock content %}
+<!-- <h2>{{ code }}</h2> -->
+<h3>{{project.id}}</h3>
+<h2>{{project.title}}</h2>
+<p>{{project.description}}</p>
+{% endblock content %}
