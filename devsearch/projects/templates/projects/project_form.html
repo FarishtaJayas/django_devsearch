@@ -1,0 +1,16 @@
+{% extends "main.html" %} {% block content %}
+
+<h1>Project Form</h1>
+
+<form action="POST">
+  {% csrf_token %}
+  {% comment %} {{  form.as_p  }} {% endcomment %}
+
+  {% for field in form %}
+  <h3>{{field.label}}<h3>
+    
+  {{field}}
+  {% endfor %}
+  <input type="submit"  />
+</form>
+{% endblock %}

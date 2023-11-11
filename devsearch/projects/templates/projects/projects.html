@@ -1,22 +1,28 @@
 {% extends "main.html" %} {% block content %}
 <h1>Projects Page</h1>
 
-{% if context.number > 10 %}
-<p>Number is greater than 10</p>
-{% elif context.number == 10 %}
-<p>The Number is equal to 10</p>
-{% else %}
-<p>Number is smaller than 10</p>
-{% endif %}
-
 <hr />
 <h1>Projects</h1>
-{% for project in context.projectList %}
-<ul>
-  <li>id:{{ project.id }}</li>
-  <li>
-    Name: <a href="{% url 'project' project.id %}">{{ project.title }}</a>
-  </li>
-  <li>Description: {{ project.description }}</li>
-</ul>
-{% endfor %} {% endblock content %}
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Project</th>
+    <th>Postive Votes</th>
+    <th>Votes</th>
+    <th>Created</th>
+    <th></th>
+  </tr>
+  {% for project in projectList %}
+  <tr>
+    <td>{{ project.id }}</td>
+    <td>{{ project.title }}</td>
+    <td>{{ project.vote_ratio }}%</td>
+    <td>{{ project.vote_total }}</td>
+    <td>{{ project.created }}</td>
+    <td><a href="{% url 'project' project.id %}">View</a></td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock content %}

@@ -3,5 +3,10 @@
 <!-- <h2>{{ code }}</h2> -->
 <h3>{{project.id}}</h3>
 <h2>{{project.title}}</h2>
+<hr />
+{% for tag in project.tags.all %}
+<span style="border: 5px solid grey">{{ tag.name }}</span>
+{% endfor %}
+<hr />
 <p>{{project.description}}</p>
 {% endblock content %}
