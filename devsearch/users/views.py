@@ -1,13 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
+from django.contrib import messages
+# from django.contrib.auth.forms import UserCreationForm
 from .models import *
+from .forms import CustomUserCreationForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 
 def loginUser(request):
-
+    page = 'login'
     if request.user.is_authenticated:
         return redirect('profiles')
 
@@ -18,7 +22,8 @@ def loginUser(request):
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            print('Username does not exist')
+            messages.error(request, 'Username does not exist')
+            return render(request, 'users/login_register.html', {'page': page})
 
         user = authenticate(request, username=username, password=password)
 
@@ -26,14 +31,36 @@ def loginUser(request):
             login(request, user)
             return redirect('profiles')
         else:
-            print('Username or Password is incorrect')
+            messages.error(request, 'Username or Password is incorrect')
 
-    return render(request, 'users/login_register.html')
+    return render(request, 'users/login_register.html', {'page': page})
 
 
 def logoutUser(request):
     logout(request)
+    messages.info(request, 'User was logged out')
     return redirect('login')
+
+
+def registerUser(request):
+    page = 'register'
+    form = CustomUserCreationForm
+
+    if request.method == "POST":
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            messages.success(request, "User account was created")
+
+            login(request, user)
+            return redirect('profiles')
+        else:
+            messages.error(
+                request, "An error has occurred during registration")
+    context = {'page': page, 'form': form}
+    return render(request, 'users/login_register.html', context)
 
 
 def profiles(request):
@@ -51,3 +78,18 @@ def userProfile(request, pk):
     context = {'profile': user_data, 'top_skills': top_skills,
                'other_skills': other_skills, }
     return render(request, 'users/user-profile.html', context)
+
+
+@login_required(login_url='login')
+def userAccount(request):
+    profile = request.user.profile
+
+    skills = profile.skill_set.all()
+    projects = profile.project_set.all()
+
+    context = {
+        'profile': profile,
+        'skills': skills,
+        'projects': projects,
+    }
+    return render(request, 'users/account.html', context)
