@@ -15,13 +15,24 @@ def createProfile(sender, instance, created, *args, **kwargs):
         )
 
 
+def updateUser(sender, instance, created, *args, **kwargs):
+    profile = instance
+    user = profile.user
+    if created == False:
+        user.first_name = profile.name
+        user.username = profile.username
+        user.email = profile.email
+        user.save()
+
+
 def deleteProfile(sender, instance, *args, **kwargs):
     user = instance.user
     user.delete()
 
 
 post_save.connect(createProfile, sender=User)
-post_delete.connect(deleteProfile, sender=User)
+post_save.connect(updateUser, sender=Profile)
+post_delete.connect(deleteProfile, sender=Profile)
 
 
 # @receiver(post_save, sender=Profile)

@@ -1,4 +1,6 @@
-{% extends "main.html" %} {% block content %} {% load static %}
+{% extends "main.html" %}
+{% block content %}
+{% load static %}
 
 <!-- Main Section -->
 <main class="projects">
@@ -34,11 +36,13 @@
         <div class="column">
           <div class="card project">
             <a href="{% url 'project' project.id %}" class="project">
-              <img
-                class="project__thumbnail"
-                src="{{ project.featured_image.url }}"
-                alt="project thumbnail"
-              />
+              <div class="thumbnail-container">
+                <img
+                  class="project__thumbnail"
+                  src="{{ project.featured_image.url }}"
+                  alt="project thumbnail"
+                />
+              </div>
               <div class="card__body">
                 <h3 class="project__title">{{ project.title }}</h3>
                 <p>
